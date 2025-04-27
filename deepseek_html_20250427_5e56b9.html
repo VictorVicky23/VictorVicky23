@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victor Barre - Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #27ae60;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --move-x: 0;
+            --move-y: 0;
+        }
+
+        body {
+            overflow-x: hidden;
+            perspective: 1000px;
+            background: var(--dark-color);
+        }
+
+        /* 3D Animation Styles */
+        .section-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .text-parallax {
+            transform: translate3d(
+                calc(var(--move-x) * 1px),
+                calc(var(--move-y) * 1px),
+                0
+            );
+            transition: transform 0.3s ease-out;
+        }
+
+        /* Navigation */
+        .navbar {
+            background-color: rgba(44, 62, 80, 0.9);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin: 0 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            transform: translateZ(0);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url('https://source.unsplash.com/random/1920x1080') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 1rem;
+            transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
+            transition: transform 0.5s;
+        }
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: translateZ(50px);
+        }
+
+        .hero-content p {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            transform: translateZ(30px);
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 5rem 2rem;
+            background-color: var(--light-color);
+            transform: translateZ(0);
+        }
+
+        .project-card {
+            transform: rotateY(0deg) scale(1);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .project-card:hover {
+            transform: rotateY(10deg) scale(1.05);
+        }
+
+        /* Skills Section */
+        .skill-item {
+            transform: translateZ(0);
+            transition: all 0.3s;
+        }
+
+        .skill-item:hover {
+            transform: translateZ(20px) scale(1.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Contact Section */
+        .contact {
+            transform: translateZ(0);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(3deg); }
+        }
+
+        .cta-btn {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Add more animations and media queries as needed */
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero section-3d">
+        <div class="hero-content">
+            <h1 class="text-parallax">Hi, I'm Victor Barre</h1>
+            <p class="text-parallax">Creative Developer & Designer</p>
+            <button class="cta-btn">Explore My World</button>
+        </div>
+    </section>
+
+    <!-- Add other sections similarly with section-3d class -->
+
+    <script>
+        // Mouse movement parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+            
+            document.documentElement.style.setProperty('--move-x', x);
+            document.documentElement.style.setProperty('--move-y', y);
+            
+            // 3D rotation effect
+            document.querySelectorAll('.section-3d').forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const centerY = (rect.top + rect.bottom) / 2;
+                const rotateX = (e.clientY - centerY) * 0.02;
+                const rotateY = (e.clientX - window.innerWidth/2) * -0.02;
+                
+                section.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+        });
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.transform = 'translateZ(0) rotateX(0) rotateY(0)';
+                    entry.target.style.opacity = 1;
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.section-3d').forEach(section => {
+            section.style.opacity = 0;
+            section.style.transform = 'translateZ(100px) rotateX(20deg)';
+            observer.observe(section);
+        });
+
+        // Text hover effect
+        document.querySelectorAll('h1, h2, h3, p').forEach(text => {
+            text.addEventListener('mousemove', (e) => {
+                const rect = text.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                text.style.transform = `perspective(1000px) rotateX(${(y - rect.height/2) * 0.1}deg) rotateY(${(x - rect.width/2) * -0.1}deg)`;
+            });
+            
+            text.addEventListener('mouseleave', () => {
+                text.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
